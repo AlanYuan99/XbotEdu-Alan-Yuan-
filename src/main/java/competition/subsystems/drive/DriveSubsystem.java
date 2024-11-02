@@ -24,7 +24,7 @@ public class DriveSubsystem extends BaseDriveSubsystem implements DataFrameRefre
 
     public final XCANSparkMax frontLeft;
     public final XCANSparkMax frontRight;
-
+    public boolean precisionModeToggled = false;
     DoubleProperty dp;
 
     @Inject
@@ -49,9 +49,23 @@ public class DriveSubsystem extends BaseDriveSubsystem implements DataFrameRefre
         // an example, here is some code that has the frontLeft motor to spin according
         // to
         // the value of leftPower:
-        frontLeft.set(leftPower);
+
+        if (precisionModeToggled) {
+            frontLeft.set(leftPower*-0.5);
+            frontRight.set(rightPower*-0.5);
+        }
+        else {
+            frontRight.set(rightPower*-1);
+            frontLeft.set(leftPower*-1);
+        }
+
+
 
     }
+    public void togglePrecisionMode() {
+        this.precisionModeToggled = !precisionModeToggled;
+    }
+
     @Override
     public PIDManager getPositionalPid() {
         // TODO: Auto-generated method stub
