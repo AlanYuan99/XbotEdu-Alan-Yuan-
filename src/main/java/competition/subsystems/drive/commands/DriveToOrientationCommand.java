@@ -13,6 +13,7 @@ public class DriveToOrientationCommand extends BaseCommand {
     DriveSubsystem drive;
     PoseSubsystem pose;
 
+    double initialPosition;
     double goal;
     double currentPosition;
     double oldPosition;
@@ -43,14 +44,26 @@ public class DriveToOrientationCommand extends BaseCommand {
         // - Gets the robot to turn to the target orientation
         // - Gets the robot stop (or at least be moving really really slowly) at the
         // target position
-
         currentPosition = pose.getCurrentHeading().getDegrees();
         positionDif = currentPosition - oldPosition;
         range = goal - currentPosition;
+
+        if (range > 180) {
+            range = range - 360;
+        }
+
         power = range * .9 - positionDif * 1.1;
+
+        if (power > 1) {
+            power = 1;
+        }
+        if (power < -1) {
+            power = -1;
+        }
+
         drive.tankDrive(power, -power);
         oldPosition = pose.getCurrentHeading().getDegrees();
-
+        System.out.println("Goal: " + this.goal);
         System.out.println("Power: " + power);
         System.out.println("Range: " + range);
         System.out.println("Position Difference: " + positionDif);
