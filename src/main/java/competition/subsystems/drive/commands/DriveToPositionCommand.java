@@ -44,12 +44,16 @@ public class DriveToPositionCommand extends BaseCommand {
         // How you do this is up to you. If you get stuck, ask a mentor or student for
         // some hints!
         pose.getPosition();
-        oldPosition = pose.getPosition();
         double positionDif = pose.getPosition() - oldPosition;
         double range = this.goal - pose.getPosition();
-        double power = range * .8 - positionDif*2;;
+        double power = range * 5 - positionDif*50;;
         drive.tankDrive(-power, -power);
+        oldPosition = pose.getPosition();
 
+        System.out.println("Range: " + range);
+        System.out.println("Position Difference: " + positionDif);
+        System.out.println("Current Position: " + pose.getPosition());
+        System.out.println("Old Position:" + oldPosition);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class DriveToPositionCommand extends BaseCommand {
         double range = this.goal - pose.getPosition();
         double positionDif = pose.getPosition() - oldPosition;
 
-        if (abs(positionDif) < .01 && range < .01 && range > 0) {
+        if (abs(positionDif) < .001 && range < .001 && range > 0) {
             return true;
         }
         return false;
